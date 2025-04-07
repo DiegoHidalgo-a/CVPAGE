@@ -363,7 +363,7 @@ const App = () => {
               <div className="relative group">
                 <div className="absolute -inset-4 bg-gradient-to-br from-red-600/20 to-transparent rounded-2xl opacity-70 group-hover:opacity-100 transition-all duration-700"></div>
                 <img
-                  src="/4.jpg"
+                  src="/5.jpg"
                   alt="Diego Hidalgo"
                   className="w-full max-w-lg rounded-lg shadow-2xl object-cover h-[500px] transform group-hover:-translate-y-2 transition-transform duration-500"
                 />
