@@ -283,7 +283,7 @@ const App = () => {
       {/* Premium Hero Section with Parallax Effect */}
       <section 
         id="hero"
-        className="fixed h-[100vh] w-full flex items-center justify-start bg-[url('/public/4.jpg')] bg-cover bg-center bg-fixed"
+        className="fixed h-[100vh] w-full flex items-center justify-start bg-[url('/4.jpg')] bg-cover bg-center bg-fixed"
         style={{ 
           filter: `blur(${blurIntensity}px)`,
           transform: `translateY(${window.scrollY * 0.3}px)`
