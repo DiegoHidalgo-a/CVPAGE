@@ -404,7 +404,7 @@ const App = () => {
               >
                 <div className="absolute -inset-2 md:-inset-4 bg-gradient-to-br from-red-600/20 to-transparent rounded-2xl opacity-70 group-hover:opacity-100 transition-all duration-500"></div>
                 <img
-                  src="/public/5.jpg"
+                  src="/public/4.jpg"
                   alt="Diego Hidalgo"
                   className="w-full rounded-lg shadow-2xl object-cover h-[200px] md:h-[500px] transform group-hover:-translate-y-1 transition-all duration-500"
                 />
