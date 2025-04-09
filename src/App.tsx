@@ -404,7 +404,7 @@ const App = () => {
               >
                 <div className="absolute -inset-2 md:-inset-4 bg-gradient-to-br from-red-600/20 to-transparent rounded-2xl opacity-70 group-hover:opacity-100 transition-all duration-500"></div>
                 <img
-                  src="/2.jpg"
+                  src="/5.jpg"
                   alt="Diego Hidalgo"
                   className="w-full rounded-lg shadow-2xl object-cover h-[200px] md:h-[500px] transform group-hover:-translate-y-1 transition-all duration-500"
                 />
@@ -589,7 +589,7 @@ const App = () => {
                     </ul>
                     <div className="mt-4" data-aos="zoom-in" data-aos-delay="400">
                       <img 
-                        src="/public/7.jpg" 
+                        src="/7.jpg" 
                         alt="F1 Design" 
                         className="rounded-lg w-full h-48 object-cover shadow-md"
                       />
@@ -928,7 +928,7 @@ const App = () => {
               >
                 <div className="relative h-64 overflow-hidden">
                   <img 
-                    src="/public/ciim.jpg" 
+                    src="/ciim.jpg" 
                     alt="ACMO Tech" 
                     className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500"
                   />
@@ -964,7 +964,7 @@ const App = () => {
               >
                 <div className="relative h-64 overflow-hidden">
                   <img 
-                    src="/public/4.jpg" 
+                    src="/rd.jpg" 
                     alt="Red Planet" 
                     className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500"
                   />
@@ -1000,7 +1000,7 @@ const App = () => {
               >
                 <div className="relative h-64 overflow-hidden">
                   <img 
-                    src="/public/4.jpg" 
+                    src="/kart.jpg" 
                     alt="Karting Club" 
                     className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500"
                   />
@@ -1036,7 +1036,7 @@ const App = () => {
               >
                 <div className="relative h-64 overflow-hidden">
                   <img 
-                    src="/public/4.jpg" 
+                    src="/f1.jpg" 
                     alt="F1 Design Project" 
                     className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500"
                   />
