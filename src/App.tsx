@@ -621,7 +621,7 @@ const App = () => {
                     </ul>
                     <div className="mt-4" data-aos="zoom-in" data-aos-delay="500">
                       <img 
-                        src="/public/3.jpg" 
+                        src="/a.jpg" 
                         alt="Math Olympiad" 
                         className="rounded-lg w-full h-48 object-cover shadow-md"
                       />
