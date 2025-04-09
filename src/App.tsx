@@ -1069,7 +1069,7 @@ const App = () => {
 
         {/* Premium Contact Section */}
         <section id="contact" className="py-20 bg-gradient-to-br from-red-600/70 to-red-800/70 text-white relative overflow-hidden">
-          <div className="absolute inset-0 bg-[url('/2.jpg')] bg-cover bg-center bg-fixed opacity-10"></div>
+          <div className="absolute inset-0 bg-[url('/4.jpg')] bg-cover bg-center bg-fixed opacity-10"></div>
           <div className="absolute inset-0 bg-gradient-to-br from-red-600/70 to-red-800/70"></div>
           <div className="container mx-auto px-6 relative">
             <h2 className="text-4xl font-bold mb-12 text-center" data-aos="fade-down">
