@@ -525,7 +525,7 @@ const App = () => {
                     </ul>
                     <div className="mt-4" data-aos="zoom-in" data-aos-delay="200">
                       <img 
-                        src="/public/3.jpg" 
+                        src="/epl.jpg" 
                         alt="Einstein Prep Teaching" 
                         className="rounded-lg w-full h-48 object-cover shadow-md"
                       />
@@ -557,7 +557,7 @@ const App = () => {
                     </ul>
                     <div className="mt-4" data-aos="zoom-in" data-aos-delay="300">
                       <img 
-                        src="/public/3.jpg" 
+                        src="/d.jpg" 
                         alt="Innovation Lab" 
                         className="rounded-lg w-full h-48 object-cover shadow-md"
                       />
