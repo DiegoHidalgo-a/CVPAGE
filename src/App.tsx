@@ -404,7 +404,7 @@ const App = () => {
               >
                 <div className="absolute -inset-2 md:-inset-4 bg-gradient-to-br from-red-600/20 to-transparent rounded-2xl opacity-70 group-hover:opacity-100 transition-all duration-500"></div>
                 <img
-                  src="/public/4.jpg"
+                  src="/2.jpg"
                   alt="Diego Hidalgo"
                   className="w-full rounded-lg shadow-2xl object-cover h-[200px] md:h-[500px] transform group-hover:-translate-y-1 transition-all duration-500"
                 />
@@ -1069,7 +1069,7 @@ const App = () => {
 
         {/* Premium Contact Section */}
         <section id="contact" className="py-20 bg-gradient-to-br from-red-600/70 to-red-800/70 text-white relative overflow-hidden">
-          <div className="absolute inset-0 bg-[url('/public/2.jpg')] bg-cover bg-center bg-fixed opacity-10"></div>
+          <div className="absolute inset-0 bg-[url('/2.jpg')] bg-cover bg-center bg-fixed opacity-10"></div>
           <div className="absolute inset-0 bg-gradient-to-br from-red-600/70 to-red-800/70"></div>
           <div className="container mx-auto px-6 relative">
             <h2 className="text-4xl font-bold mb-12 text-center" data-aos="fade-down">
