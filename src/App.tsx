@@ -54,10 +54,10 @@ const App = () => {
     const handleScroll = () => {
       const scrollY = window.scrollY;
       setIsScrolled(scrollY > 10);
-      setBlurIntensity(Math.min(scrollY / 50, 5));
-      setTextOpacity(Math.min(scrollY / 200, 1));
+      setBlurIntensity(Math.min(scrollY / 30, 5));
+      setTextOpacity(Math.min(scrollY / 100, 1));
       
-      // Calculate about section opacity based on scroll position and direction
+      // Calculate about section opacity based on scroll position
       const aboutSection = document.getElementById('about');
       if (aboutSection) {
         const rect = aboutSection.getBoundingClientRect();
@@ -65,20 +65,11 @@ const App = () => {
         const scrollPosition = window.scrollY;
         const sectionTop = rect.top + scrollPosition;
         
-        // Determine scroll direction
-        const isScrollingDown = scrollY > lastScrollY;
-        setLastScrollY(scrollY);
-        
-        // Calculate opacity based on scroll position and direction
-        let opacity = 0;
-        if (isScrollingDown) {
-          opacity = Math.min(
-            Math.max(0, (scrollPosition - sectionTop + windowHeight * 0.5) / (windowHeight * 0.5)),
-            1
-          );
-        } else {
-          opacity = 0; // Completely transparent when scrolling up
-        }
+        // Calculate opacity with a more subtle fade effect
+        const opacity = Math.min(
+          Math.max(0.3, (scrollPosition - sectionTop + windowHeight * 0.5) / (windowHeight * 0.3)),
+          1
+        );
         setAboutOpacity(opacity);
       }
 
@@ -96,7 +87,7 @@ const App = () => {
       // Detect active section
       const sections = document.querySelectorAll<HTMLElement>('section[id]');
       sections.forEach(section => {
-        const sectionTop = section.offsetTop - 200;
+        const sectionTop = section.offsetTop - 100;
         const sectionHeight = section.offsetHeight;
         const sectionId = section.getAttribute('id');
         
@@ -109,6 +100,26 @@ const App = () => {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, [lastScrollY]);
+
+  // Add this to your existing styles
+  const globalStyles = `
+    @keyframes expandWidth {
+      from { width: 0; }
+      to { width: 100%; }
+    }
+  `;
+
+  useEffect(() => {
+    // Add the styles to the document head
+    const styleElement = document.createElement('style');
+    styleElement.innerHTML = globalStyles;
+    document.head.appendChild(styleElement);
+
+    // Cleanup on unmount
+    return () => {
+      document.head.removeChild(styleElement);
+    };
+  }, []);
 
   // Premium navigation link renderer with active state
   const renderNavLink = (href: string, label: string) => {
@@ -145,8 +156,8 @@ const App = () => {
   const getBackgroundGradient = () => {
     return `linear-gradient(
       to bottom right,
-      rgba(239, 68, 68, ${textOpacity * 0.1}),
-      rgba(0, 0, 0, ${textOpacity * 0.8})
+      rgba(239, 68, 68, ${textOpacity * 0.05}),
+      rgba(0, 0, 0, ${textOpacity * 0.4})
     )`;
   };
 
@@ -209,8 +220,10 @@ const App = () => {
       {/* Premium Navigation Bar */}
       <nav
         className={`fixed w-full z-50 transition-all duration-500 ${
-          isScrolled ? 'bg-white/90 backdrop-blur-md shadow-lg py-3' : 'bg-transparent py-6'
-        }`}
+          isScrolled 
+            ? 'bg-white/60 backdrop-blur-sm shadow-lg py-3' 
+            : 'bg-transparent py-6'
+        } md:transition-all md:duration-500`}
       >
         <div className="container mx-auto px-6">
           <div className="flex justify-between items-center">
@@ -222,25 +235,25 @@ const App = () => {
               offset={-100}
               className={`text-xl font-bold ${
                 isScrolled ? 'text-red-600' : 'text-white'
-              } flex items-center cursor-pointer group`}
+              } flex items-center cursor-pointer md:group`}
               data-aos="fade-right"
             >
-              <Rocket className="mr-2 transition-transform duration-500 group-hover:rotate-45" />
-              <span className="transition-all duration-500 group-hover:tracking-wider">DIEGO HIDALGO</span>
+              <Rocket className="mr-2 md:transition-transform md:duration-500 md:group-hover:rotate-45" />
+              <span className="md:transition-all md:duration-500 md:group-hover:tracking-wider">DIEGO HIDALGO</span>
             </Link>
 
             {/* Mobile Menu Button */}
             <button
               className={`md:hidden rounded-md p-2 ${
-                isScrolled ? 'text-gray-900 hover:bg-gray-100' : 'text-white hover:bg-gray-800'
-              } transition-all`}
+                isScrolled ? 'text-gray-900' : 'text-white'
+              }`}
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               aria-label="Toggle menu"
             >
               {isMobileMenuOpen ? (
-                <X size={24} className="animate-spin-in" />
+                <X size={24} />
               ) : (
-                <Menu size={24} className="animate-pulse" />
+                <Menu size={24} />
               )}
             </button>
 
@@ -250,15 +263,30 @@ const App = () => {
             </div>
           </div>
 
-          {/* Premium Mobile Navigation */}
+          {/* Mobile Navigation */}
           <div 
-            className={`md:hidden ${isMobileMenuOpen ? 'block' : 'hidden'} mt-4 transition-all duration-500 ${
-              isScrolled ? 'bg-white/95' : 'bg-gray-900/95'
-            } rounded-xl p-6 shadow-2xl backdrop-blur-lg`}
-            data-aos="fade-down"
+            className={`md:hidden ${isMobileMenuOpen ? 'block' : 'hidden'} mt-4 ${
+              isScrolled ? 'bg-white/70' : 'bg-gray-900/70'
+            } rounded-xl p-6 shadow-2xl backdrop-blur-sm`}
           >
             <div className="flex flex-col space-y-4">
-              {navLinks.map(link => renderNavLink(link.href, link.label))}
+              {navLinks.map(({ href, label }) => (
+                <Link
+                  key={href}
+                  to={href.replace('#', '')}
+                  smooth={true}
+                  duration={800}
+                  offset={-100}
+                  className={`${
+                    isScrolled 
+                      ? 'text-gray-900' 
+                      : 'text-white'
+                  } px-4 py-2 rounded-md text-sm`}
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  {label}
+                </Link>
+              ))}
               <div className="flex justify-center space-x-6 pt-6">
                 {socialLinks.map(({ href, icon: Icon, label }) => (
                   <a
@@ -267,8 +295,8 @@ const App = () => {
                     target="_blank"
                     rel="noopener noreferrer"
                     className={`${
-                      isScrolled ? 'text-gray-900 hover:text-red-600' : 'text-white hover:text-red-200'
-                    } transition-all transform hover:scale-125`}
+                      isScrolled ? 'text-gray-900' : 'text-white'
+                    }`}
                     aria-label={label}
                   >
                     <Icon size={24} />
@@ -280,20 +308,23 @@ const App = () => {
         </div>
       </nav>
 
-      {/* Premium Hero Section with Parallax Effect */}
+      {/* Hero Section with Fixed Background */}
       <section 
         id="hero"
-        className="fixed h-[100vh] w-full flex items-center justify-start bg-[url('/4.jpg')] bg-cover bg-center bg-fixed"
+        className="fixed h-[100vh] w-full flex items-center justify-start bg-[url('/public/4.jpg')] bg-cover bg-center"
         style={{ 
           filter: `blur(${blurIntensity}px)`,
-          transform: `translateY(${window.scrollY * 0.3}px)`
         }}
       >
         <div 
           className="absolute inset-0 transition-all duration-1000"
           style={{ 
-            background: getBackgroundGradient(),
-            opacity: textOpacity * 0.7
+            background: `linear-gradient(
+              to bottom right,
+              rgba(239, 68, 68, ${textOpacity * 0.05}),
+              rgba(0, 0, 0, ${textOpacity * 0.4})
+            )`,
+            opacity: textOpacity * 0.5
           }}
         />
         <div className="container mx-auto px-6 text-left relative" data-aos="fade-up" data-aos-delay="200">
@@ -347,69 +378,110 @@ const App = () => {
         {/* About Section */}
         <section 
           id="about" 
-          className="min-h-[100vh] flex items-center justify-center py-32 relative bg-gradient-to-b from-gray-900 to-black"
+          className="min-h-[60vh] md:min-h-[100vh] flex items-start md:items-center justify-center pt-12 md:py-32 relative bg-gradient-to-b from-gray-900/70 to-black/70 overflow-hidden"
           style={{ 
             opacity: aboutOpacity,
-            transition: 'opacity 0.7s ease-out, transform 0.7s ease-out',
-            transform: `translateY(${scrollDirection === 'down' ? '0' : '-20px'})`
+            transition: 'opacity 0.5s ease-out, transform 0.3s ease-out',
+            transform: 'translateY(0)'
           }}
         >
-          <div className="container mx-auto px-6 grid grid-cols-1 md:grid-cols-2 gap-16 relative">
+          <div className="container mx-auto px-4 md:px-6 flex flex-col md:grid md:grid-cols-2 gap-4 md:gap-16 relative">
             <div 
-              className="flex items-center justify-center transition-opacity duration-700"
-              data-aos="fade-right"
-              data-aos-duration="1000"
+              className="flex flex-col items-center justify-center order-2 md:order-1"
+              data-aos="fade-up"
+              data-aos-duration="600"
+              data-aos-easing="ease-out-cubic"
+              data-aos-once="true"
+              data-aos-offset="50"
             >
-              <div className="relative group">
-                <div className="absolute -inset-4 bg-gradient-to-br from-red-600/20 to-transparent rounded-2xl opacity-70 group-hover:opacity-100 transition-all duration-700"></div>
+              <div 
+                className="relative group w-full max-w-[280px] md:max-w-md"
+                data-aos="zoom-in"
+                data-aos-delay="200"
+                data-aos-duration="600"
+                data-aos-easing="ease-out-cubic"
+                data-aos-once="true"
+              >
+                <div className="absolute -inset-2 md:-inset-4 bg-gradient-to-br from-red-600/20 to-transparent rounded-2xl opacity-70 group-hover:opacity-100 transition-all duration-500"></div>
                 <img
-                  src="/5.jpg"
+                  src="/public/5.jpg"
                   alt="Diego Hidalgo"
-                  className="w-full max-w-lg rounded-lg shadow-2xl object-cover h-[500px] transform group-hover:-translate-y-2 transition-transform duration-500"
+                  className="w-full rounded-lg shadow-2xl object-cover h-[200px] md:h-[500px] transform group-hover:-translate-y-1 transition-all duration-500"
                 />
-                <div className="absolute -bottom-4 -right-4 bg-red-600/90 text-white px-6 py-3 rounded-lg shadow-lg transform group-hover:scale-110 transition-transform duration-300">
-                  <span className="font-medium text-lg">Diego Hidalgo</span>
+                <div 
+                  className="absolute -bottom-2 -right-2 md:-bottom-4 md:-right-4 bg-red-600/90 text-white px-3 md:px-6 py-1.5 md:py-3 rounded-lg shadow-lg transform group-hover:scale-105 transition-all duration-500"
+                  data-aos="fade-left"
+                  data-aos-delay="800"
+                  data-aos-duration="600"
+                  data-aos-easing="ease-out-cubic"
+                  data-aos-once="true"
+                >
+                  <span className="font-medium text-sm md:text-lg">Diego Hidalgo</span>
                 </div>
               </div>
             </div>
             <div 
-              className="flex flex-col justify-center transition-opacity duration-700"
-              data-aos="fade-left"
-              data-aos-duration="1000"
-              data-aos-delay="200"
+              className="flex flex-col justify-center order-1 md:order-2"
+              data-aos="fade-up"
+              data-aos-duration="600"
+              data-aos-easing="ease-out-cubic"
+              data-aos-once="true"
+              data-aos-offset="50"
             >
-              <h2 className="text-4xl font-bold mb-8 text-white relative inline-block">
+              <h2 
+                className="text-xl md:text-4xl font-bold mb-3 md:mb-8 text-white relative inline-block"
+                data-aos="fade-right"
+                data-aos-delay="200"
+                data-aos-duration="600"
+                data-aos-easing="ease-out-cubic"
+                data-aos-once="true"
+              >
                 <span className="relative z-10">About Me</span>
-                <span className="absolute bottom-0 left-0 w-full h-2 bg-red-600/50 z-0 opacity-70"></span>
+                <span 
+                  className="absolute bottom-0 left-0 h-1.5 md:h-2 bg-red-600/50 z-0 w-0 transition-all duration-1000 ease-out group-hover:w-full"
+                  style={{
+                    animation: 'width 0.6s ease-out 0.6s forwards',
+                    width: '0%',
+                    transitionProperty: 'width',
+                    transitionDuration: '0.6s',
+                    transitionTimingFunction: 'ease-out',
+                    transitionDelay: '0.6s'
+                  }}
+                ></span>
               </h2>
-              <div className="bg-gray-800/50 p-10 rounded-xl shadow-lg backdrop-blur-sm border border-gray-700/50">
-                <p className="text-white leading-relaxed mb-8 text-lg">
+              <div 
+                className="bg-gray-800/30 p-3 md:p-10 rounded-xl shadow-lg backdrop-blur-sm border border-gray-700/30"
+                data-aos="fade-up"
+                data-aos-delay="400"
+                data-aos-duration="800"
+                data-aos-easing="ease-out-cubic"
+                data-aos-once="true"
+              >
+                <p 
+                  className="text-white leading-relaxed mb-3 md:mb-8 text-xs md:text-lg"
+                  data-aos="fade-up"
+                  data-aos-delay="600"
+                  data-aos-duration="800"
+                  data-aos-easing="ease-out-cubic"
+                  data-aos-once="true"
+                >
                   I'm a passionate third-year electrical engineering student at Texas Tech University with a 4.0 GPA, 
                   specializing in cutting-edge technology applications for motorsports. My journey from a small rural 
                   town in Costa Rica to becoming a leader in academic and competitive engineering environments has 
                   shaped my innovative approach to problem-solving.
                 </p>
-                <p className="text-white leading-relaxed mb-8 text-lg">
+                <p 
+                  className="text-white leading-relaxed mb-3 md:mb-8 text-xs md:text-lg"
+                  data-aos="fade-up"
+                  data-aos-delay="800"
+                  data-aos-duration="800"
+                  data-aos-easing="ease-out-cubic"
+                  data-aos-once="true"
+                >
                   As the president of three student organizations (ACMO Tech, Red Planet, and Red Karting Racing Club), 
                   I bridge theory with practical applications through hands-on projects in mathematics, aerospace 
                   engineering, and motorsports technology.
                 </p>
-                <div className="grid grid-cols-2 gap-6">
-                  <div className="bg-gray-700/30 p-6 rounded-lg backdrop-blur-sm border border-gray-600/30">
-                    <div className="flex items-center mb-3">
-                      <Cpu className="text-red-400 mr-3" size={24} />
-                      <h3 className="font-semibold text-white text-xl">Current Focus</h3>
-                    </div>
-                    <p className="text-white text-lg">F1 Technology, Aerodynamics, Electrical Systems</p>
-                  </div>
-                  <div className="bg-gray-700/30 p-6 rounded-lg backdrop-blur-sm border border-gray-600/30">
-                    <div className="flex items-center mb-3">
-                      <Users className="text-red-400 mr-3" size={24} />
-                      <h3 className="font-semibold text-white text-xl">Leadership</h3>
-                    </div>
-                    <p className="text-white text-lg">President of 3 Student Organizations</p>
-                  </div>
-                </div>
               </div>
             </div>
           </div>
@@ -430,7 +502,7 @@ const App = () => {
               <div className="hidden lg:block absolute left-1/2 h-full w-0.5 bg-red-200 transform -translate-x-1/2"></div>
               
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                {/* Experience Item 1 */}
+                {/* Experience Item 1 - Einstein Prep */}
                 <div 
                   className="relative"
                   data-aos="fade-up"
@@ -442,18 +514,19 @@ const App = () => {
                         <BookOpen className="text-red-600" size={20} />
                       </div>
                       <div>
-                        <h3 className="text-xl font-semibold text-gray-900">Math Kangaroo Olympiad Prep Tutor</h3>
-                        <p className="text-gray-500">Colegio Científico de San Vito • Sep-Dec 2022</p>
+                        <h3 className="text-xl font-semibold text-gray-900">SAT, Programming & Robotics Tutor</h3>
+                        <p className="text-gray-500">Einstein Prep and Learning • Mar 2025-Present</p>
+                        <p className="text-gray-500 text-sm">Avenida Escazú, Costa Rica</p>
                       </div>
                     </div>
                     <ul className="text-gray-600 list-disc list-inside space-y-2">
-                      <li>Prepared students resulting in 3 gold and 3 bronze medals at national competition</li>
-                      <li>Spearheaded STEAM introduction project engaging 30 children in hands-on learning</li>
+                      <li>Provide expert tutoring in SAT preparation, programming languages, and robotics</li>
+                      <li>Develop and deliver structured lesson plans to enhance student understanding and performance</li>
                     </ul>
                     <div className="mt-4" data-aos="zoom-in" data-aos-delay="200">
                       <img 
-                        src="/3.jpg" 
-                        alt="Math Olympiad" 
+                        src="/public/3.jpg" 
+                        alt="Einstein Prep Teaching" 
                         className="rounded-lg w-full h-48 object-cover shadow-md"
                       />
                     </div>
@@ -462,75 +535,11 @@ const App = () => {
                   <div className="hidden lg:block absolute top-6 -right-3 w-6 h-6 bg-red-600 rounded-full border-4 border-white"></div>
                 </div>
 
-                {/* Experience Item 2 */}
+                {/* Experience Item 2 - Innovation Department */}
                 <div 
                   className="relative lg:mt-20"
                   data-aos="fade-up"
                   data-aos-delay="200"
-                >
-                  <div className="bg-white p-6 rounded-xl shadow-md hover:shadow-xl transition-all duration-500 hover:-translate-y-2 lg:ml-8">
-                    <div className="flex items-start mb-4">
-                      <div className="bg-red-100 p-3 rounded-full mr-4">
-                        <Rocket className="text-red-600" size={20} />
-                      </div>
-                      <div>
-                        <h3 className="text-xl font-semibold text-gray-900">Autodesk Design Engineer</h3>
-                        <p className="text-gray-500">F1 in Schools Costa Rica • May-Oct 2023</p>
-                      </div>
-                    </div>
-                    <ul className="text-gray-600 list-disc list-inside space-y-2">
-                      <li>Key member of winning F1 in Schools team as lead engineer designer</li>
-                      <li>Applied advanced aerodynamics and physics principles to create award-winning designs</li>
-                    </ul>
-                    <div className="mt-4" data-aos="zoom-in" data-aos-delay="300">
-                      <img 
-                        src="/4.jpg" 
-                        alt="F1 Design" 
-                        className="rounded-lg w-full h-48 object-cover shadow-md"
-                      />
-                    </div>
-                  </div>
-                  {/* Timeline dot */}
-                  <div className="hidden lg:block absolute top-6 -left-3 w-6 h-6 bg-red-600 rounded-full border-4 border-white"></div>
-                </div>
-
-                {/* Experience Item 3 */}
-                <div 
-                  className="relative lg:mt-10"
-                  data-aos="fade-up"
-                  data-aos-delay="300"
-                >
-                  <div className="bg-white p-6 rounded-xl shadow-md hover:shadow-xl transition-all duration-500 hover:-translate-y-2 lg:mr-8">
-                    <div className="flex items-start mb-4">
-                      <div className="bg-red-100 p-3 rounded-full mr-4">
-                        <Users className="text-red-600" size={20} />
-                      </div>
-                      <div>
-                        <h3 className="text-xl font-semibold text-gray-900">Speaker & Technical Judge</h3>
-                        <p className="text-gray-500">F1 in Schools Costa Rica • Apr 2024-Present</p>
-                      </div>
-                    </div>
-                    <ul className="text-gray-600 list-disc list-inside space-y-2">
-                      <li>Spearheaded car design analysis across 15 national venues</li>
-                      <li>Partnered with Boston Scientific and Tecnikids senior engineers</li>
-                    </ul>
-                    <div className="mt-4" data-aos="zoom-in" data-aos-delay="400">
-                      <img 
-                        src="/2.jpg" 
-                        alt="F1 Judging" 
-                        className="rounded-lg w-full h-48 object-cover shadow-md"
-                      />
-                    </div>
-                  </div>
-                  {/* Timeline dot */}
-                  <div className="hidden lg:block absolute top-6 -right-3 w-6 h-6 bg-red-600 rounded-full border-4 border-white"></div>
-                </div>
-
-                {/* Experience Item 4 */}
-                <div 
-                  className="relative lg:mt-20"
-                  data-aos="fade-up"
-                  data-aos-delay="400"
                 >
                   <div className="bg-white p-6 rounded-xl shadow-md hover:shadow-xl transition-all duration-500 hover:-translate-y-2 lg:ml-8">
                     <div className="flex items-start mb-4">
@@ -546,10 +555,74 @@ const App = () => {
                       <li>Manage department programs, optimizing efficiency</li>
                       <li>Receive mentorship from department head</li>
                     </ul>
+                    <div className="mt-4" data-aos="zoom-in" data-aos-delay="300">
+                      <img 
+                        src="/public/3.jpg" 
+                        alt="Innovation Lab" 
+                        className="rounded-lg w-full h-48 object-cover shadow-md"
+                      />
+                    </div>
+                  </div>
+                  {/* Timeline dot */}
+                  <div className="hidden lg:block absolute top-6 -left-3 w-6 h-6 bg-red-600 rounded-full border-4 border-white"></div>
+                </div>
+
+                {/* Experience Item 3 - F1 in Schools */}
+                <div 
+                  className="relative lg:mt-10"
+                  data-aos="fade-up"
+                  data-aos-delay="300"
+                >
+                  <div className="bg-white p-6 rounded-xl shadow-md hover:shadow-xl transition-all duration-500 hover:-translate-y-2 lg:mr-8">
+                    <div className="flex items-start mb-4">
+                      <div className="bg-red-100 p-3 rounded-full mr-4">
+                        <Rocket className="text-red-600" size={20} />
+                      </div>
+                      <div>
+                        <h3 className="text-xl font-semibold text-gray-900">Autodesk Design Engineer</h3>
+                        <p className="text-gray-500">F1 in Schools Costa Rica • May-Oct 2023</p>
+                      </div>
+                    </div>
+                    <ul className="text-gray-600 list-disc list-inside space-y-2">
+                      <li>Key member of winning F1 in Schools team as lead engineer designer</li>
+                      <li>Applied advanced aerodynamics and physics principles to create award-winning designs</li>
+                    </ul>
+                    <div className="mt-4" data-aos="zoom-in" data-aos-delay="400">
+                      <img 
+                        src="/public/7.jpg" 
+                        alt="F1 Design" 
+                        className="rounded-lg w-full h-48 object-cover shadow-md"
+                      />
+                    </div>
+                  </div>
+                  {/* Timeline dot */}
+                  <div className="hidden lg:block absolute top-6 -right-3 w-6 h-6 bg-red-600 rounded-full border-4 border-white"></div>
+                </div>
+
+                {/* Experience Item 4 - Math Kangaroo */}
+                <div 
+                  className="relative lg:mt-20"
+                  data-aos="fade-up"
+                  data-aos-delay="400"
+                >
+                  <div className="bg-white p-6 rounded-xl shadow-md hover:shadow-xl transition-all duration-500 hover:-translate-y-2 lg:ml-8">
+                    <div className="flex items-start mb-4">
+                      <div className="bg-red-100 p-3 rounded-full mr-4">
+                        <BookOpen className="text-red-600" size={20} />
+                      </div>
+                      <div>
+                        <h3 className="text-xl font-semibold text-gray-900">Math Kangaroo Olympiad Prep Tutor</h3>
+                        <p className="text-gray-500">Colegio Científico de San Vito • Sep-Dec 2022</p>
+                      </div>
+                    </div>
+                    <ul className="text-gray-600 list-disc list-inside space-y-2">
+                      <li>Prepared students resulting in 3 gold and 3 bronze medals at national competition</li>
+                      <li>Spearheaded STEAM introduction project engaging 30 children in hands-on learning</li>
+                    </ul>
                     <div className="mt-4" data-aos="zoom-in" data-aos-delay="500">
                       <img 
-                        src="/3.jpg" 
-                        alt="Innovation Lab" 
+                        src="/public/3.jpg" 
+                        alt="Math Olympiad" 
                         className="rounded-lg w-full h-48 object-cover shadow-md"
                       />
                     </div>
@@ -564,7 +637,7 @@ const App = () => {
 
         {/* Education Section with Card Design */}
         <section id="education" className="min-h-screen py-32 relative">
-          <div className="absolute inset-0 bg-[url('/3.jpg')] bg-cover bg-center bg-fixed opacity-20"></div>
+          <div className="absolute inset-0 bg-[url('/public/4.jpg')] bg-cover bg-center bg-fixed opacity-20"></div>
           <div className="container mx-auto px-6 relative">
             <h2 className="text-4xl font-bold mb-16 text-center text-gray-900" data-aos="fade-down">
               Education & <span className="text-red-600">Qualifications</span>
@@ -742,7 +815,7 @@ const App = () => {
 
         {/* Awards Section with Trophy Display */}
         <section id="awards" className="min-h-screen py-32 relative">
-          <div className="absolute inset-0 bg-[url('/4.jpg')] bg-cover bg-center bg-fixed opacity-20"></div>
+          <div className="absolute inset-0 bg-[url('/public/4.jpg')] bg-cover bg-center bg-fixed opacity-20"></div>
           <div className="container mx-auto px-6 relative">
             <h2 className="text-4xl font-bold mb-16 text-center text-gray-900" data-aos="fade-down">
               Awards & <span className="text-red-600">Achievements</span>
@@ -855,7 +928,7 @@ const App = () => {
               >
                 <div className="relative h-64 overflow-hidden">
                   <img 
-                    src="/4.jpg" 
+                    src="/public/ciim.jpg" 
                     alt="ACMO Tech" 
                     className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500"
                   />
@@ -891,7 +964,7 @@ const App = () => {
               >
                 <div className="relative h-64 overflow-hidden">
                   <img 
-                    src="/4.jpg" 
+                    src="/public/4.jpg" 
                     alt="Red Planet" 
                     className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500"
                   />
@@ -927,7 +1000,7 @@ const App = () => {
               >
                 <div className="relative h-64 overflow-hidden">
                   <img 
-                    src="/4.jpg" 
+                    src="/public/4.jpg" 
                     alt="Karting Club" 
                     className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500"
                   />
@@ -963,7 +1036,7 @@ const App = () => {
               >
                 <div className="relative h-64 overflow-hidden">
                   <img 
-                    src="/4.jpg" 
+                    src="/public/4.jpg" 
                     alt="F1 Design Project" 
                     className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500"
                   />
@@ -995,9 +1068,9 @@ const App = () => {
         </section>
 
         {/* Premium Contact Section */}
-        <section id="contact" className="py-20 bg-gradient-to-br from-red-600 to-red-800 text-white relative overflow-hidden">
-          <div className="absolute inset-0 bg-[url('/3.jpg')] bg-cover bg-center bg-fixed opacity-10"></div>
-          <div className="absolute inset-0 bg-gradient-to-br from-red-600/90 to-red-800/90"></div>
+        <section id="contact" className="py-20 bg-gradient-to-br from-red-600/70 to-red-800/70 text-white relative overflow-hidden">
+          <div className="absolute inset-0 bg-[url('/public/2.jpg')] bg-cover bg-center bg-fixed opacity-10"></div>
+          <div className="absolute inset-0 bg-gradient-to-br from-red-600/70 to-red-800/70"></div>
           <div className="container mx-auto px-6 relative">
             <h2 className="text-4xl font-bold mb-12 text-center" data-aos="fade-down">
               Let's <span className="text-white">Connect</span>
