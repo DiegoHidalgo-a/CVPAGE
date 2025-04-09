@@ -1036,7 +1036,7 @@ const App = () => {
               >
                 <div className="relative h-64 overflow-hidden">
                   <img 
-                    src="/.jpg" 
+                    src="/design.jpg" 
                     alt="F1 Design Project" 
                     className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500"
                   />
