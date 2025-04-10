@@ -638,7 +638,7 @@ const App = () => {
         <section id="education" className="min-h-screen py-32 relative">
           <div className="absolute inset-0 bg-[url('/public/4.jpg')] bg-cover bg-center bg-fixed opacity-20"></div>
           <div className="container mx-auto px-6 relative">
-            <h2 className="text-4xl font-bold mb-16 text-center text-white-900" data-aos="fade-down">
+            <h2 className="text-4xl font-bold mb-16 text-center text-white" data-aos="fade-down">
               Education & <span className="text-red-600">Qualifications</span>
             </h2>
             
@@ -816,7 +816,7 @@ const App = () => {
         <section id="awards" className="min-h-screen py-32 relative">
           <div className="absolute inset-0 bg-[url('/public/4.jpg')] bg-cover bg-center bg-fixed opacity-20"></div>
           <div className="container mx-auto px-6 relative">
-            <h2 className="text-4xl font-bold mb-16 text-center text-gray-900" data-aos="fade-down">
+            <h2 className="text-4xl font-bold mb-16 text-center text-white" data-aos="fade-down">
               Awards & <span className="text-red-600">Achievements</span>
             </h2>
             
