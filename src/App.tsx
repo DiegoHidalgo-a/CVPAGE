@@ -338,8 +338,7 @@ const App = () => {
               Electrical Engineering Student | F1 Technology Innovator
             </p>
             <p className="text-lg text-white mb-8 opacity-80 leading-relaxed">
-              Combining cutting-edge electrical engineering expertise with motorsport passion to 
-              revolutionize performance through innovative systems and aerodynamic solutions.
+              
             </p>
             <div className="flex space-x-4">
               <Link
